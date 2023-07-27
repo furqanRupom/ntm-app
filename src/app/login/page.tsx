@@ -1,21 +1,36 @@
-"use client";
-
+"use client"
+import {useState} from 'react'
 import Link from "next/link";
 import { useForm } from "react-hook-form";
+import { toast } from 'react-hot-toast';
+import axios from 'axios';
 
 const LoginPage = () => {
+  const [loading,setLoading] = useState(false)
   const {
     register,
     handleSubmit,
     watch,
     formState: { errors },
   } = useForm();
-  const onSubmit = (data: any) => {
-    console.log(data);
+  const onSubmit = async(user: any) => {
+    console.log(user);
+    try {
+      const response = await axios.post('/api/users/login',user)
+      console.log('login successfully',response.data);
+      toast.success('Login successfully');
+    } catch (error:any) {
+      toast.error(error.message);
+      console.log(error);
+    }
+    finally{
+      setLoading(false);
+    }
+
   };
   return (
     <section
-      className="bg-cover  "
+      className="bg-cover"
       style={{
         backgroundImage:
           "url(https://i.ytimg.com/vi/ePC_jwL4phg/maxresdefault.jpg)",
@@ -28,7 +43,7 @@ const LoginPage = () => {
         onSubmit={handleSubmit(onSubmit)}
       >
         <h3 className="text-3xl font-bold text-center text-white pt-12 pb-6 uppercase">
-          Please Login
+          {loading ? 'Processing': 'Please Login'}
         </h3>
         <div className="mx-auto max-w-xl ">
           <div className="flex flex-col  space-y-8">
