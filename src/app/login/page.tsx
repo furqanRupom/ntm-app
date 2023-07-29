@@ -2,12 +2,14 @@
 import {useState} from 'react'
 import Link from "next/link";
 import { useForm } from "react-hook-form";
-import { toast } from 'react-hot-toast';
+import { Toaster, toast } from 'react-hot-toast';
 import axios from 'axios';
+import { useRouter } from 'next/navigation';
 
 
 const LoginPage = () => {
   const [loading,setLoading] = useState(false)
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -20,6 +22,7 @@ const LoginPage = () => {
       const response = await axios.post('/api/users/login',user)
       console.log('login successfully',response.data);
       toast.success('Login successfully');
+      router.push('/')
     } catch (error:any) {
       toast.error(error.message);
       console.log(error);
@@ -94,6 +97,7 @@ const LoginPage = () => {
           </div>
         </div>
       </form>
+      <Toaster position="top-center" reverseOrder={false} />
     </section>
   );
 };

@@ -3,13 +3,18 @@ import User from '@/models/userModels'
 import { NextResponse,NextRequest } from "next/server";
 import bcryptjs from "bcryptjs"
 import { sendEmail } from "@/helpers/mailer";
+import jwt from 'jsonwebtoken'
+import { useRouter } from "next/navigation";
 
 connect();
-
 export const POST = async(request:NextResponse)=>{
+
     try {
+        // eslint-disable-next-line react-hooks/rules-of-hooks
+        const router = useRouter();
         const reqBody =  await request.json()
         const {username,email,password} = reqBody;
+
         console.log(reqBody);
 
         // check user is exit or not
@@ -36,10 +41,14 @@ export const POST = async(request:NextResponse)=>{
         console.log(savedUser);
 
         // send verifycation email
-        
+
         await sendEmail({email, emailType: 'VERIFY',userId: savedUser._id})
 
-        return NextResponse.json({message:'user created successfully',status:200})
+
+
+      return NextResponse.json({message:'user created successfully',status:200})
+
+
 
 
     } catch (error) {

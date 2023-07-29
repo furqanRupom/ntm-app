@@ -3,20 +3,23 @@ import User from '@/models/userModels'
 import { NextResponse,NextRequest } from "next/server";
 import bcryptjs from "bcryptjs"
 import jwt from "jsonwebtoken"
+import { useRouter } from "next/navigation";
 
 
 connect();
 
 export const POST = async(request:NextResponse) =>{
     try {
+
         const reqBody = await request.json();
         const {email,password} = reqBody;
         console.log(email,password);
 
+
         // if user exit or not
 
         const user = await User.findOne({email});
-
+        console.log(user)
         if(!user){
            return NextResponse.json({error:'user does not exit'},{status:404})
         }
@@ -37,6 +40,7 @@ export const POST = async(request:NextResponse) =>{
             email:user.email
         }
 
+
         // create token
         const token =  jwt.sign(tokenData,process.env.SECRET_TOKEN!,{
             expiresIn:'1d'
@@ -45,6 +49,7 @@ export const POST = async(request:NextResponse) =>{
             message:'Login user successfully',
             success:true
         })
+        console.log(token)
 
 
         // set the token in the cookies
@@ -53,7 +58,7 @@ export const POST = async(request:NextResponse) =>{
             httpOnly:true,
         })
 
-
+        
 
         return response;
 
