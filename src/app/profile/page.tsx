@@ -8,6 +8,7 @@ import axios from "axios";
 
 const Profile = () => {
   const [profile, setProfile] = useState(false);
+  const [data,setData] = useState('')
   const router = useRouter();
   // log out
 
@@ -20,6 +21,15 @@ const Profile = () => {
         toast.error(error.message)
     }
   };
+
+
+  const getUserDetails = async () =>{
+     const response = await axios.get('/api/users/me');
+     const id =  response.data.data._id
+     console.log(id);
+     setData(id);
+
+  }
   return (
     <header className="grid grid-cols-[1fr,5fr]">
       {/* sidebar */}
@@ -51,10 +61,14 @@ const Profile = () => {
           </li>
 
           <li>
-            <button onClick={logOut} className="px-7 py-3 rounded-3xl hover:text-white hover:bg-green-400 text-xl  duration-150 text-green-400 bg-white shadow">
+            <button onClick={getUserDetails} className="px-7 py-3  rounded-3xl hover:text-white hover:bg-red-400 text-xl  duration-150 text-red-400 bg-white shadow">
+             info
+            </button>
+            <button onClick={logOut} className="px-7 ml-3 py-3 rounded-3xl hover:text-white hover:bg-green-400 text-xl  duration-150 text-green-400 bg-white shadow">
               Log out
             </button>
           </li>
+
         </ul>
 
         {/* profile visit */}
@@ -66,6 +80,7 @@ const Profile = () => {
                 <li className="flex flex-col space-y-2 pt-3">
                   <Link href="/">Your Profile</Link>
                   <Link href="/">Settings</Link>
+                  <Link href={`/profile/${data}`}>Info</Link>
                 </li>
               </ul>
               <button
@@ -77,7 +92,14 @@ const Profile = () => {
             </nav>
           </div>
         )}
+
+
+       <div>
+        <h3>user info : { data === '' ? "nothing" : data}</h3>
+       </div>
       </nav>
+
+
 
       <Toaster position="top-center" reverseOrder={false} />
     </header>
